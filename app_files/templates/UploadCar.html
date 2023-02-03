@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Upload Car</title>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">	
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> 
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	  
+    <script src="{{ url_for('static',filename='script.js')}}"></script>
+    <script src="{{ url_for('static',filename='Car_Color.json')}}"></script>
+    
+    <link rel="stylesheet" href="{{ url_for('static',filename='style.css')}}">
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+    <script>
+    
+        $(document).ready(function(){
+        	
+            $(function(){
+                $("#nav-bar").load("{{ url_for('nav')}}");
+            });
+            
+            $('.car-dropdown').select2();
+            
+            getStateList().forEach((item) => {
+        		$('#txt_reg_state').append('<option value="' + item + '">' + item + '</option>');
+    		})
+    		getTitleStatusList().forEach((item) => {
+    			$('#txt_titlestatus').append('<option value="' + item + '">' + item + '</option>')
+    		})
+    		getCarConditionList().forEach((item) => {
+    			$('#txt_car_condition').append('<option value="' + item + '">' + item + '</option>')
+    		})
+    		getCylinderList().forEach((item) => {
+    			$('#txt_cylinder').append('<option value="' + item + '">' + item + '</option>')
+    		})
+    		getFuelList().forEach((item) => {
+    			$('#txt_fuel').append('<option value="' + item + '">' + item + '</option>')
+    		})
+    		getTransmissionTypeList().forEach((item) => {
+    			$('#txt_transmission').append('<option value="' + item + '">' + item + '</option>')
+    		})
+    		getDriveTypeList().forEach((item) => {
+    			$('#txt_drive').append('<option value="' + item + '">' + item + '</option>')
+    		})
+    		getCarSizeList().forEach((item) => {
+    			$('#txt_carsize').append('<option value="' + item + '">' + item + '</option>')
+    		})
+    		getCarTypeList().forEach((item) => {
+    			$('#txt_cartype').append('<option value="' + item + '">' + item + '</option>')
+    		})
+    		
+    		fetch("./static/Car_Color.json")
+    		.then(response => response.json())
+    		.then(jsondata => {
+    				console.log(jsondata)
+	        })
+        });
+    </script>
+</head>
+
+<body>
+	<div id="nav-bar"></div>
+	<div id="spinnerDiv"></div>
+    <br/><br/><br/><br/><br/><br/>
+    <div>
+    	<form id="uploadcar_form" class="needs-validation upload-car-validation" novalidate>
+    	<div class="row">
+    		<div class="col" >
+    			
+    			<div class="form-group row image-div">
+	 				<div id="car_carousel" class="carousel slide" data-bs-ride="carousel">
+						<div class="carousel-indicators">
+    						<button type="button" data-bs-target="#car_carouselo" data-bs-slide-to="0" class="active"></button>
+    						<button type="button" data-bs-target="#car_carousel" data-bs-slide-to="1"></button>
+    						<button type="button" data-bs-target="#car_carousel" data-bs-slide-to="2"></button>
+    						<button type="button" data-bs-target="#car_carousel" data-bs-slide-to="3"></button>
+    						<button type="button" data-bs-target="#car_carousel" data-bs-slide-to="4"></button>
+  						</div>
+
+						<div class="carousel-inner">
+    						<div class="carousel-item active">
+      							<img src="{{ url_for('static',filename='imagebackground.jpg')}}" class="d-block image-class" id="car_image_1">
+    						</div>
+    						<div class="carousel-item">
+      							<img src="{{ url_for('static',filename='imagebackground.jpg')}}"  class="d-block image-class" id="car_image_2">
+    						</div>
+    						<div class="carousel-item">
+      							<img src="{{ url_for('static',filename='imagebackground.jpg')}}" class="d-block image-class" id="car_image_3">
+    						</div>
+    						<div class="carousel-item">
+      							<img src="{{ url_for('static',filename='imagebackground.jpg')}}" class="d-block image-class" id="car_image_4">
+    						</div>
+    						<div class="carousel-item">
+      							<img src="{{ url_for('static',filename='imagebackground.jpg')}}" class="d-block image-class" id="car_image_5">
+    						</div>
+  						</div>
+
+				  		<button class="carousel-control-prev" type="button" data-bs-target="#car_carousel" data-bs-slide="prev">
+    						<span class="carousel-control-prev-icon"></span>
+  						</button>
+  						<button class="carousel-control-next" type="button" data-bs-target="#car_carousel" data-bs-slide="next">
+    						<span class="carousel-control-next-icon"></span>
+  						</button>
+					</div>
+    				<div id="car-image" style="margin-top:30px">
+ 						<div class='cardiv'>
+  							<input class="carimage-file" type="file" id="image_upload_1" name="file" hidden accept="image/jpg, image/jpeg, image/png" onchange="loadCarImageThumbnail(this,car_image_1,car_image_11)">
+          					<label for="image_upload_1">
+            					<img  id="car_image_11" class ="image_upload_1" src="{{ url_for('static',filename='image_upload.png')}}" class="img-thumbnail" alt="Image 1" width="150" height="150">
+          					</label>
+          					<span class="close-button" onclick="removeCarImage(car_image_1,car_image_11,image_upload_1)">X</span>
+ 						</div>
+ 						<div class='cardiv'>
+  							<input class="carimage-file" type="file" id="image_upload_2" name="file" hidden accept="image/jpg, image/jpeg, image/png" onchange="loadCarImageThumbnail(this,car_image_2,car_image_12)">
+          					<label for="image_upload_2">
+            					<img id="car_image_12" class ="image_upload_2" src="{{ url_for('static',filename='image_upload.png')}}" class="img-thumbnail" alt="Image 2" width="150" height="150">
+          					</label>
+          					<span class="close-button" onclick="removeCarImage(car_image_2,car_image_12,image_upload_2)">X</span>
+ 						</div>
+ 						<div class='cardiv'>
+  							<input class="carimage-file" type="file" id="image_upload_3" name="file" hidden accept="image/jpg, image/jpeg, image/png" onchange="loadCarImageThumbnail(this,car_image_3,car_image_13)">
+          					<label for="image_upload_3">
+            					<img id="car_image_13" class ="image_upload_3" src="{{ url_for('static',filename='image_upload.png')}}" class="img-thumbnail" alt="Image 3" width="150" height="150">
+          					</label>
+          					<span class="close-button" onclick="removeCarImage(car_image_3,car_image_13,image_upload_3)">X</span>
+ 						</div>
+ 						<div class='cardiv'>
+  							<input class="carimage-file" type="file" id="image_upload_4" name="file" hidden accept="image/jpg, image/jpeg, image/png" onchange="loadCarImageThumbnail(this,car_image_4,car_image_14)">
+          					<label for="image_upload_4">
+            					<img id="car_image_14" class ="image_upload_4" src="{{ url_for('static',filename='image_upload.png')}}" class="img-thumbnail" alt="Image 4" width="150" height="150">
+          					</label>
+          					<span class="close-button" onclick="removeCarImage(car_image_4,car_image_14,image_upload_4)">X</span>
+ 						</div>
+ 						<div class='cardiv'>
+  							<input class="carimage-file" type="file" id="image_upload_5" name="file" hidden accept="image/jpg, image/jpeg, image/png" onchange="loadCarImageThumbnail(this,car_image_5,car_image_15)">
+          					<label for="image_upload_5">
+            					<img id="car_image_15" class ="image_upload_5" src="{{ url_for('static',filename='image_upload.png')}}" class="img-thumbnail" alt="Image 5" width="150" height="150">
+          					</label>
+          					<span class="close-button" onclick="removeCarImage(car_image_5,car_image_15,image_upload_5)">X</span>
+ 						</div>
+					</div>
+					
+					<div id ="estimatedpricediv" class='row mb-3 '>
+					<label for="txt_EstimatedPrice" class="col-form-label">Estimated Price</label>
+					<div class="col-sm-10">
+					<div class="row"><div class="col-3" id="txt_minestimatedprice"></div>
+					<div class="col">
+					<input type="range" step="1" class="form-range" id="txt_carprice" name="points" onchange="displaySelectedCarPrice(this);">
+					</div>
+					<div class="col-3" id="txt_maxestimatedprice"></div>
+					</div>
+					<input class="form-control car-data" type="text" id="txt_EstimatedPrice" name="txt_EstimatedPrice" disabled required><br/>
+					<button type="button" class="btn btn-primary" onclick="estimatePrice()">Estimate Price</button>
+    				<button type=button id="btnSaveCar" class="btn btn-primary" onclick="uploadCar()" disabled>Save</button>
+					</div>
+					</div>
+    			</div>
+    			
+    		</div>
+    		<div class="col">
+    			<div class="text-center row mb-3"><label id="newcar_error_message" class="text-color"></label></div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_manufacturer" class="col-sm-3 col-form-label">Manufacturer</label>
+    					<div class="col-sm-8">
+    						<select class="form-control car-data car-dropdown" id="txt_manufacturer" name="txt_manufacturer" required>
+    					<Option value=""> ---None--- </Option>
+    					{%
+							for manufacturer in car_manufacturer_list:
+						%}
+  						<option value="{{manufacturer[0]}}">{{manufacturer[1]}}</option>
+  						{%
+							endfor
+						%}
+					</select>
+					<div class="invalid-feedback">Manufacturer is required</div>
+					</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_model" class="col-sm-3 col-form-label">Model</label>
+    				<div class="col-sm-8">
+    				<select class="form-control car-data car-dropdown" id="txt_model" name="txt_model" required>
+    					<Option value=""> ---None--- </Option>
+    				</select>
+    				<div class="invalid-feedback">Model is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_build_year" class="col-sm-3 col-form-label">Build Year</label>
+    				<div class="col-sm-8">
+    				<input class="form-control car-data" type="text" id="txt_build_year" name="txt_build_year" required maxlength="4" pattern="^[0-9]{4}$" onblur="checkYearValidation(this.value)">
+    				<div  class="invalid-feedback">Valid Build Year is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_titlestatus" class="col-sm-3 col-form-label">Title Status</label>
+    				<div class="col-sm-8">
+    				<select class="form-control car-data" id="txt_titlestatus" name="txt_titlestatus" required>
+    					<option value=""> --- None --- </option>
+    				</select>
+    				<div class="invalid-feedback">Title status is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_car_condition" class="col-sm-3 col-form-label">Car Condition</label>
+    				<div class="col-sm-8">
+    				<select class="form-control car-data" id="txt_car_condition" name="txt_car_condition" required>
+    					<option value=""> --- None --- </option>
+    				</select>
+    				<div class="invalid-feedback">Car Condition is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_cylinder" class="col-sm-3 col-form-label">No. of Cylinders</label>
+    				<div class="col-sm-8">
+    				<select class="form-control car-data" id="txt_cylinder" name="txt_cylinder" required>
+    					<option value=""> --- None --- </option>
+    				</select>
+    				<div class="invalid-feedback">No. of Cylinders is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_fuel" class="col-sm-3 col-form-label">Fuel Type</label>
+    				<div class="col-sm-8">
+    				<select class="form-control car-data" id="txt_fuel" name="txt_fuel" required>
+    					<option value=""> --- None --- </option>
+    				</select>
+    				<div class="invalid-feedback">Fuel Type is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_odometer" class="col-sm-3 col-form-label">Odometer</label>
+    				<div class="col-sm-8">
+    				<input class="form-control car-data" type="text" id="txt_odometer" name="txt_odometer" pattern="\d*" maxlength="7" required>
+    				<div class="invalid-feedback">Valid Odometer is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_transmission" class="col-sm-3 col-form-label">Transmission Type</label>
+    				<div class="col-sm-8">
+    				<select class="form-control car-data" id="txt_transmission" name="txt_transmission" required>
+    					<option value=""> --- None --- </option>
+    				</select>
+    				<div class="invalid-feedback">Transmission Type is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_vin" class="col-sm-3 col-form-labell">VIN</label>
+    				<div class="col-sm-8">
+    				<input class="form-control car-data" type="text" id="txt_vin" name="txt_vin" required>
+    				<div class="invalid-feedback">VIN is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_drive" class="col-sm-3 col-form-label">Drive</label>
+    				<div class="col-sm-8">
+    				<select class="form-control car-data" id="txt_drive" name="txt_drive" required>
+    					<option value=""> --- None --- </option>
+    				</select>
+    				<div class="invalid-feedback">Drive is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_carsize" class="col-sm-3 col-form-label">Car Size</label>
+    				<div class="col-sm-8">
+    				<select class="form-control car-data" id="txt_carsize" name="txt_carsize" required>
+    					<option value=""> --- None --- </option>
+    				</select>
+    				<div class="invalid-feedback">Car Size is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_cartype" class="col-sm-3 col-form-label">Car Type</label>
+    				<div class="col-sm-8">
+    				<select class="form-control car-data" id="txt_cartype" name="txt_cartype" required>
+    					<option value=""> --- None --- </option>
+    				</select>
+    				<div class="invalid-feedback">Car Type is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_color" class="col-sm-3 col-form-labell">Body Color</label>
+    				<div class="col-sm-8">
+    				<select class="form-control car-data" id="txt_color" name="txt_color" required>
+    					<option value=""> --- None --- </option>
+    				</select>
+    				<!--  <input class="form-control car-data" type="text" id="txt_color" name="txt_color" required> -->
+    				<div class="invalid-feedback">Body Color is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_description" class="col-sm-3 col-form-labell">Description</label>
+    				<div class="col-sm-8">
+    				<textarea class="form-control car-data" id="txt_description" name="txt_description" rows="3" maxlength="300" required></textarea>
+    				<div class="invalid-feedback">Description is required</div>
+    				</div>
+    			</div>
+    			<div class="form-group row mb-3">
+    				<label for="txt_reg_state" class="col-sm-3 col-form-label">Registration State</label>
+    				<div class="col-sm-8">
+    				<select class="form-control car-data" id="txt_reg_state" name="txt_reg_state" required>
+    					<Option value=""> ---None--- </Option>
+    				</select>
+    				<div class="invalid-feedback">Registration State is required</div>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    	<!-- <div class="left-bottom">
+    		
+    		<button type="button" class="btn btn-primary" onclick="estimatePrice()">Estimate Price</button>
+    		<button type=button id="btnSaveCar" class="btn btn-primary" onclick="uploadCar()" >Save</button>
+    		
+		</div>	 -->
+    	</form>
+    </div>
+</body>
+
+</html>
+<script>
+var model_element = document.querySelector('#txt_model')
+dselect(model_element, {
+	search: true
+});
+</script>

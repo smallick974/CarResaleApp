@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin</title>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">	
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> 
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ url_for('static',filename='script.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='style.css')}}">
+	
+    <script>
+        $(document).ready(function(){
+            $(function(){
+                $("#nav-bar").load("{{ url_for('nav')}}");
+            });
+            
+        })
+    </script>
+</head>
+
+<body class="backcolor">
+<div id="spinnerDiv"></div>
+<div id="nav-bar"></div>
+ <br/><br/><br/><br/><br/>
+ <ul class="nav nav-tabs" id="adminTaskTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="cars-tab" data-bs-toggle="tab" data-bs-target="#cars" type="button" role="tab" aria-controls="cars" aria-selected="true">Cars</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="false">Users</button>
+  </li>
+  
+</ul>
+<div class="tab-content" id="adminTabData">
+  	<div class="tab-pane fade show active" id="cars" role="tabpanel" aria-labelledby="cars-tab">
+  	<div style="margin:50px">
+		<div class="card">
+			<form id="update_status_form" class="needs-validation update-status-validation" novalidate>
+				<div class="row" style="margin:10px">
+  						<div class="form-group row mb-3">
+    					<label for="txt_manufacturerlist" class="col-sm-3 col-form-label">Manufacturer</label>
+    						<div class="col-sm-3">
+    							<select class="form-control car-data" id="txt_manufacturerlist" name="txt_manufacturerlist" required >
+    								<Option value=""> ---None--- </Option>
+    								{%
+										for manufacturer in car_manufacturer_list:
+									%}
+  									<option value="{{manufacturer[0]}}">{{manufacturer[1]}}</option>
+  									{% endfor %}
+								</select>
+								<div class="invalid-feedback">Please select Manufacturer</div>
+							</div>
+							<div class="col-sm-3">
+							</div>
+							</div>
+							<div class="form-group row mb-3">
+    							<label for="txt_modellist" class="col-sm-3 col-form-label">Model</label>
+    							<div class="col-sm-3">
+    								<select class="form-control car-data" id="txt_modellist" name="txt_modellist" required>
+    									<Option value=""> ---None--- </Option>
+    								</select>
+    								<div class="invalid-feedback">Please select Model to update</div>
+    							</div>
+    							<div class="col-sm-3">
+    							<select class="form-control car-data" id="txt_modal_status" name="txt_modal_status" required>
+    								<Option value=""> ---None--- </Option>
+								</select>
+								<div class="invalid-feedback">Modal Status is required</div>
+							</div>
+    						</div>
+    						<div class="form-group row mb-3 hide-element" id="bodycolor-div">
+  							<label for="txt_modellist" class="col-sm-3 col-form-label">Body Color</label>
+    							<div class="col-sm-3" id="txt_body_color">
+    								
+    							</div>
+    						</div>					
+  					</div>
+			</form>
+			<div class="center" style="margin:10px;">
+				<a class ="btn btn-primary hide-element" href="#addNewBodyColor" data-bs-toggle="modal" id="addBodyColorBtn">Add Body Color</a>
+				<a class ="btn btn-primary" href="#addNewManufacturer" data-bs-toggle="modal">Add New Manufacturer/Model</a>
+			</div>
+		</div>
+		<!-- Add new manufacturer/ modal popup -->
+		<div class="modal" id="addNewManufacturer" role="dialog">
+		<div class="modal-dialog modal-dialog-centered">
+        	<!-- Modal content-->
+        	<div class="modal-content">
+          		<div class="modal-header">
+          			<h5 class="modal-title">Add New Manufacturer/Model</h5>
+            		<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          		</div>
+          		<div class="modal-body">
+          			<form class="needs-validation new-manufacturer-validation" novalidate id="new_manufacturer_form">
+          				<div class="mb-3">
+							<label for="txt_manufacturer_name" class="label-sm">Select Manufacturer</label>
+							<select class="form-control" id="txt_manufacturer_name" name="txt_manufacturer_name" required >
+    								<Option value=""> ---None--- </Option>
+    								{%
+										for manufacturer in car_manufacturer_list:
+									%}
+  									<option value="{{manufacturer[0]}}">{{manufacturer[1]}}</option>
+  									{% endfor %}
+								</select>
+						</div>
+						<div class="mb-3">
+							<label for="txt_new_Manufacturer" class="label-sm">Enter New Manufacturer Name</label>
+							<input type="text" class="form-control" id="txt_new_Manufacturer" name="txt_new_Manufacturer" maxlength="100" required>
+						</div>
+						<div class="mb-3">
+							<label for="txt_new_model">Model Names</label>
+							<textarea class="form-control" id="txt_new_model" rows="5"></textarea>
+						</div>
+          			</form>
+          		</div>
+          		<div class="text-center"><label id="add_new_model_errormsg" class="text-color"></label></div><br/>	
+            	<div class="modal-footer">
+            		<div class="text-center">
+              			<div class="mb-4">
+              				<button type="button" class="btn btn-primary center-block button-style" onclick='saveManufacturerModel()'>Save</button>
+              			</div>
+            		</div>
+        		</div>
+        	</div>
+      	</div>
+      	
+      </div>
+		<!-- Add new Body Color -->
+		<div class="modal" id="addNewBodyColor" role="dialog">
+		<div class="modal-dialog modal-dialog-centered">
+        	<!-- Modal content-->
+        	<div class="modal-content">
+          		<div class="modal-header">
+          			<h5 class="modal-title">Add New Body Color</h5>
+            		<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          		</div>
+          		<div class="modal-body">
+          			<form class="needs-validation new-model-color" novalidate id="new_body_color">
+						<div class="mb-3">
+							<label for="txt_car_color">Enter Colors to add for Model</label>
+							<textarea class="form-control" id="txt_car_color" rows="5" required></textarea>
+						</div>
+          			</form>
+          		</div>
+          		<div class="text-center"><label id="add_new_body_errormsg" class="text-color"></label></div><br/>	
+            	<div class="modal-footer">
+            		<div class="text-center">
+              			<div class="mb-4">
+              				<button type="button" class="btn btn-primary center-block button-style" onclick='saveColor()'>Save</button>
+              			</div>
+            		</div>
+        		</div>
+        	</div>
+      	</div>
+      </div>
+	 </div></div>
+			
+  	<div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+  		<div style="margin:50px;">
+		<div class="card"><br/>
+			<div style="margin-left:30%">
+			
+			<div class="row" style="margin:10px;">
+  				<div class="form-group row mb-3">
+					<div class="col-sm-6"><input class="form-control" id="txtUserSearch" type="text" placeholder="Enter Email Id To Search"></div><br/>
+				</div>
+				<div class="form-group row mb-3 hide-element" id="user-search-errordiv">
+				</div>
+				<form id="update_userprofile_form" class="needs-validation update-user-profile-validation" novalidate>
+				<div class="form-group row mb-3 hide-element" id="user-profile-div">
+					<div class="form-group row mb-3">
+    					<div class="col-sm-3"><label for="txt_userId" class="label-sm">User Id</label></div>
+    					<div class="col-sm-3">
+    						<input type="text" class="form-control" name="txt_userId" id="txt_userId" disabled>
+						</div>
+					</div>
+					<div class="form-group row mb-3">
+    					<div class="col-sm-3"><label for="txt_useremail_id1" class="label-sm">Email Id</label></div>
+    					<div class="col-sm-3">
+    						<input type="email" class="form-control" name="txt_useremail_id1" id="txt_useremail_id1" disabled>
+						</div>
+					</div>
+					<div class="form-group row mb-3">
+    					<div class="col-sm-3"><label for="txt_userfirstname" class="label-sm">Firstname</label></div>
+    					<div class="col-sm-3">
+    						<input type="text" class="form-control" name="txt_userfirstname" id="txt_userfirstname" required maxlength="40" onkeydown="validateName(event)">
+							<div class="invalid-feedback">Firstname is required</div>
+						</div>
+					</div>                		
+					<div class="form-group row mb-3">
+    					<div class="col-sm-3"><label for="txt_userlastname" class="label-sm">Lastname</label></div>
+    					<div class="col-sm-3">
+    						<input type="text" class="form-control" name="txt_userlastname" id="txt_userlastname" required maxlength="40" onkeydown="validateName(event)">
+							<div class="invalid-feedback">Lastname is required</div>
+						</div>
+					</div>                		
+					<div class="form-group row mb-3">
+    					<div class="col-sm-3"><label for="txt_userphone_no" class="label-sm">Contact</label></div>
+    					<div class="col-sm-3">
+    						<input type="text" class="form-control" name="txt_userphone_no" id="txt_userphone_no" required maxlength="10" pattern="^[0-9]{10}$">
+							<div class="invalid-feedback">A valid Contact no is required</div>
+						</div>
+					</div>                		
+					<div class="form-group row mb-3">
+    					<div class="col-sm-3">
+    						<label id="userprofile_error_message" class="text-color"></label>
+    						<label id="user_message" style="color:green"></label>
+						</div>
+					</div> 
+					<div class="form-group row mb-3">
+    					<div class="col-sm-3">
+    						<button type="button" class="btn btn-primary center-block button-style" onclick='updateUserProfile()'>Update</button>
+						</div>
+					</div>    		
+				</div></form>
+			</div>
+			
+			</div>
+		</div>
+		</div>
+		</div>
+  		
+  	</div>
+	
+</body>
+
+</html>

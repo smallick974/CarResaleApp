@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Automobile Resale Portal</title>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">	
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> 
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="{{ url_for('static',filename='script.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename='style.css')}}">
+	
+    <script type="text/javascript">
+    	const cars = {
+  			set manufacturer(value) {
+  				if(!this.carmanufacturer.includes(value))
+  					this.carmanufacturer.push(value);
+  			},
+  			set manufacturerId(value) {
+  				if(!this.carmanufacturerId.includes(value))
+  					this.carmanufacturerId.push(value);
+  			},
+  			set model(value) {
+  				if(!cars.carmodel.includes(value))
+    				this.carmodel.push(value);
+  			},
+  			set buildyear(value) {
+  				if(!cars.carbuildyear.includes(value))
+    				this.carbuildyear.push(value);
+  			},
+  			set condition(value) {
+  				if(!cars.carcondition.includes(value))
+    				this.carcondition.push(value);
+  			},
+  			set cylinder(value) {
+  				if(!cars.carcylinder.includes(value))
+    				this.carcylinder.push(value);
+  			},
+  			set fueltype(value) {
+  				if(!cars.carfueltype.includes(value))
+    				this.carfueltype.push(value);
+  			},
+  			set drivetype(value) {
+  				if(!cars.cardrivetype.includes(value))
+    				this.cardrivetype.push(value);
+  			},
+  			set state(value) {
+  				if(!cars.carstate.includes(value))
+    				this.carstate.push(value);
+  			},
+  			set size(value) {
+  				if(!cars.carsize.includes(value))
+    				this.carsize.push(value);
+  			},
+  			set price(value) {
+  				if(!cars.carprice.includes(value))
+    				this.carprice.push(value);
+  			},
+  			set modelId(value) {
+  				if(!cars.carmodelId.includes(value))
+    				this.carmodelId.push(value);
+  			},
+  			carmanufacturer: [],
+  			carmodel: [],
+  			carbuildyear: [],
+  			carcondition: [],
+  			carcylinder: [],
+  			carfueltype: [],
+  			cardrivetype: [],
+  			carstate: [],
+  			carsize: [],
+  			carprice: [],
+  			carmanufacturerId: [],
+  			carmodelId : []
+  			
+		};
+    	
+    	function displaySelectedMinPrice(element){
+    		let minprice = document.getElementById('hiddenminpricevalue').value
+    		if(parseInt(element.value)-1000 <= minprice){
+    			document.getElementById('minpricevalue').value='₹ '+ minprice;
+        		document.getElementById('maxval1').innerHTML= minprice;
+        		document.getElementById('maxpricerange').setAttribute("min",minprice)
+        		element.value = minprice
+    		}
+    		else{
+    			document.getElementById('minpricevalue').value='₹ '+ element.value;
+        		document.getElementById('maxval1').innerHTML= element.value;
+        		document.getElementById('maxpricerange').setAttribute("min",element.value)
+    		}
+    		searchCars(element,'pricerange')
+    	}
+    	
+    	function displaySelectedMaxPrice(element){
+    		let maxprice = document.getElementById('hiddenmaxpricevalue').value
+    		if(parseInt(element.value)+1000 >= maxprice){
+    			document.getElementById('maxpricevalue').value='₹ '+ maxprice;
+            	document.getElementById('minval2').innerHTML= maxprice;
+            	document.getElementById('minpricerange').setAttribute("max",maxprice)
+            	element.value = maxprice
+    		}
+    		else{
+    			document.getElementById('maxpricevalue').value='₹ '+ element.value;
+            	document.getElementById('minval2').innerHTML= element.value;
+            	document.getElementById('minpricerange').setAttribute("max",element.value)    		
+        			
+    		}
+    		searchCars(element,'pricerange')
+    	}
+    	
+    	let lstmanufacture = []
+    	let lstmodel = []
+    	let lstyear = []
+    	let lstcondition = []
+    	let lstcylinder = []
+    	let lstfueltype = []
+    	let lstdrivetype = []
+    	let lststate = []
+    	let lstsize = []
+    	let minprice
+    	let maxprice
+		function searchCars(element,param){
+			console.log(element)
+			console.log(element.checked)
+			document.getElementById("txtCarSearch").value = ''
+			if(element.type === 'checkbox'){
+			if(param == 'manufacture'){
+				if(element.checked){
+					lstmanufacture.push(element.value)
+				}
+				else{
+					const index = lstmanufacture.indexOf(element.value);
+					if (index > -1) {
+						lstmanufacture.splice(index, 1);
+					}
+				}
+			}
+			else if(param == 'model'){
+				if(element.checked){
+					lstmodel.push(element.value)
+				}
+				else{
+					const index = lstmodel.indexOf(element.value);
+					if (index > -1) {
+						lstmodel.splice(index, 1);
+					}
+				}
+			}
+			else if(param == 'year'){
+				if(element.checked){
+					lstyear.push(element.value)
+				}
+				else{
+					const index = lstyear.indexOf(element.value);
+					if (index > -1) {
+						lstyear.splice(index, 1);
+					}
+				}
+			}
+			else if(param == 'condition'){
+				if(element.checked){
+					lstcondition.push(element.value)
+				}
+				else{
+					const index = lstcondition.indexOf(element.value);
+					if (index > -1) {
+						lstcondition.splice(index, 1);
+					}
+				}
+			}
+			else if(param == 'cylinder'){
+				if(element.checked){
+					lstcylinder.push(element.value)
+				}
+				else{
+					const index = lstcylinder.indexOf(element.value);
+					if (index > -1) {
+						lstcylinder.splice(index, 1);
+					}
+				}
+			}
+			else if(param == 'fueltype'){
+				if(element.checked){
+					lstfueltype.push(element.value)
+				}
+				else{
+					const index = lstfueltype.indexOf(element.value);
+					if (index > -1) {
+						lstfueltype.splice(index, 1);
+					}
+				}
+			}
+			else if(param == 'drivetype'){
+				if(element.checked){
+					lstdrivetype.push(element.value)
+				}
+				else{
+					const index = lstdrivetype.indexOf(element.value);
+					if (index > -1) {
+						lstdrivetype.splice(index, 1);
+					}
+				}
+			}
+			else if(param == 'state'){
+				if(element.checked){
+					lststate.push(element.value)
+				}
+				else{
+					const index = lststate.indexOf(element.value);
+					if (index > -1) {
+						lststate.splice(index, 1);
+					}
+				}
+			}
+			else if(param == 'size'){
+				if(element.checked){
+					lstsize.push(element.value)
+				}
+				else{
+					const index = lstsize.indexOf(element.value);
+					if (index > -1) {
+						lstsize.splice(index, 1);
+					}
+				}
+			}
+			}
+			minprice = document.getElementById('minpricevalue').value.split('₹')[1].trim()
+			maxprice = document.getElementById('maxpricevalue').value.split('₹')[1].trim()
+			jQuery.ajax({type: "GET",
+				url:'/CarDetails',
+				data: {'lstmanufacture':lstmanufacture.map(c => `'${c}'`).join(','),'lstmodel':lstmodel.map(c => `'${c}'`).join(','),'lstyear':lstyear.map(c => `'${c}'`).join(','),'lstcondition':lstcondition.map(c => `'${c}'`).join(','),'lstcylinder':lstcylinder.map(c => `'${c}'`).join(','),'lstfueltype':lstfueltype.map(c => `'${c}'`).join(','),'lstdrivetype':lstdrivetype.map(c => `'${c}'`).join(','),'lststate':lststate.map(c => `'${c}'`).join(','),'lstsize':lstsize.map(c => `'${c}'`).join(','),'minprice':minprice,'maxprice':maxprice},
+				dataType: 'json',
+				success: function (response){
+    				wishlisted_car_ids_set = getWishlistedCars(response.wishlisted_cars)
+    				displayData(response.car_list,wishlisted_car_ids_set,response.sessionvar)
+				}
+			});
+		}
+    	
+        $(document).ready(function(){
+            $(function(){
+                $("#nav-bar").load("{{ url_for('nav')}}");
+            });
+            jQuery.ajax({type: "GET",
+    			url:'/CarDetails',
+    			dataType: 'json',
+    			success: function (response){
+    				wishlisted_car_ids_set = getWishlistedCars(response.wishlisted_cars)
+    				displayData(response.car_list,wishlisted_car_ids_set,response.sessionvar)
+    				let html_carmanufacture = '';
+    				for(let m=0; m<cars.carmanufacturer.length; m++){
+    					html_carmanufacture = html_carmanufacture + '<div class="form-check">'+
+							'<input onclick="searchCars(this,\'manufacture\')" class="form-check-input searchdata" type="checkbox" value="'+cars.carmanufacturerId[m]+'" id="'+cars.carmanufacturer[m]+'">'+
+							'<label class="form-check-label" for="'+cars.carmanufacturer[m]+'">'+
+							cars.carmanufacturer[m]
+							+'</label>'+
+						'</div>'
+    					
+    				}
+    				
+    				let html_carmodel = '';
+    				for(let m=0; m<cars.carmodel.length; m++){
+    					html_carmodel = html_carmodel + '<div class="form-check">'+
+							'<input onclick="searchCars(this,\'model\')" class="form-check-input searchdata" type="checkbox" value="'+cars.carmodelId[m]+'" id="'+cars.carmodel[m]+'">'+
+							'<label class="form-check-label" for="'+cars.carmodel[m]+'">'+
+							cars.carmodel[m]
+							+'</label>'+
+						'</div>'
+    					
+    				}
+    				
+    				let html_buildyear = '';
+    				cars.carbuildyear = cars.carbuildyear.sort();
+    				for(let m=0; m<cars.carbuildyear.length; m++){
+    					html_buildyear = html_buildyear + '<div class="form-check">'+
+							'<input onclick="searchCars(this,\'year\')" class="form-check-input searchdata" type="checkbox" value="'+cars.carbuildyear[m]+'" id="'+cars.carbuildyear[m]+'">'+
+							'<label class="form-check-label" for="'+cars.carbuildyear[m]+'">'+
+							cars.carbuildyear[m]
+							+'</label>'+
+						'</div>'
+    					
+    				}
+    				
+    				let html_condition = '';
+    				cars.carcondition = cars.carcondition.sort()
+    				for(let m=0; m<cars.carcondition.length; m++){
+    					html_condition = html_condition + '<div class="form-check">'+
+							'<input onclick="searchCars(this,\'condition\')" class="form-check-input searchdata" type="checkbox" value="'+cars.carcondition[m]+'" id="'+cars.carcondition[m]+'">'+
+							'<label class="form-check-label" for="'+cars.carcondition[m]+'">'+
+							cars.carcondition[m]
+							+'</label>'+
+						'</div>'
+    					
+    				}
+    				
+    				let html_cylinder = '';
+    				cars.carcylinder = cars.carcylinder.sort()
+    				for(let m=0; m<cars.carcylinder.length; m++){
+    					html_cylinder = html_cylinder + '<div class="form-check">'+
+							'<input onclick="searchCars(this,\'cylinder\')" class="form-check-input searchdata" type="checkbox" value="'+cars.carcylinder[m]+'" id="'+cars.carcylinder[m]+'">'+
+							'<label class="form-check-label" for="'+cars.carcylinder[m]+'">'+
+							cars.carcylinder[m]
+							+'</label>'+
+						'</div>'
+    					
+    				}
+    				
+    				let html_fueltype = '';
+    				cars.carfueltype = cars.carfueltype.sort()
+    				for(let m=0; m<cars.carfueltype.length; m++){
+    					html_fueltype = html_fueltype + '<div class="form-check">'+
+							'<input onclick="searchCars(this,\'fueltype\')" class="form-check-input searchdata" type="checkbox" value="'+cars.carfueltype[m]+'" id="'+cars.carfueltype[m]+'">'+
+							'<label class="form-check-label" for="'+cars.carfueltype[m]+'">'+
+							cars.carfueltype[m]
+							+'</label>'+
+						'</div>'
+    					
+    				}
+    				
+    				let html_drivetype = '';
+    				cars.cardrivetype = cars.cardrivetype.sort()
+    				for(let m=0; m<cars.cardrivetype.length; m++){
+    					html_drivetype = html_drivetype + '<div class="form-check">'+
+							'<input onclick="searchCars(this,\'drivetype\')" class="form-check-input searchdata" type="checkbox" value="'+cars.cardrivetype[m]+'" id="'+cars.cardrivetype[m]+'">'+
+							'<label class="form-check-label" for="'+cars.cardrivetype[m]+'">'+
+							cars.cardrivetype[m]
+							+'</label>'+
+						'</div>'
+    					
+    				}
+    				
+    				let html_state = '';
+    				cars.carstate = cars.carstate.sort()
+    				for(let m=0; m<cars.carstate.length; m++){
+    					html_state = html_state + '<div class="form-check">'+
+							'<input onclick="searchCars(this,\'state\')" class="form-check-input searchdata" type="checkbox" value="'+cars.carstate[m]+'" id="'+cars.carstate[m]+'">'+
+							'<label class="form-check-label" for="'+cars.carstate[m]+'">'+
+							cars.carstate[m]
+							+'</label>'+
+						'</div>'
+    					
+    				}
+    				
+    				let html_size = '';
+    				cars.carsize = cars.carsize.sort()
+    				for(let m=0; m<cars.carsize.length; m++){
+    					html_size = html_size + '<div class="form-check">'+
+							'<input onclick="searchCars(this,\'size\')" class="form-check-input searchdata" type="checkbox" value="'+cars.carsize[m]+'" id="'+cars.carsize[m]+'">'+
+							'<label class="form-check-label" for="'+cars.carsize[m]+'">'+
+							cars.carsize[m]
+							+'</label>'+
+						'</div>'
+    					
+    				}
+    				
+    				let minprice = Math.min(...cars.carprice);
+    				let maxprice = Math.max(...cars.carprice);
+    				let html_price = '<br/><div class="row"><div class="col-3" id="minval1">'+minprice+'</div><div class="col"><input type="range" step="1000" class="form-range" id="minpricerange" name="points" value="'+minprice+'" min="'+minprice+'" max="'+maxprice+'" onchange="displaySelectedMinPrice(this);"></div><div class="col-3" id="minval2">'+maxprice+'</div></div>';
+    				html_price = html_price + '<div class="row"><div class="col-3" id="maxval1">'+minprice+'</div><div class="col"><input type="range" step="1000" class="form-range" id="maxpricerange" value="'+maxprice+'" name="points" min="'+minprice+'" max="'+maxprice+'" onchange="displaySelectedMaxPrice(this);"></div><div class="col-3" id="maxval2">'+maxprice+'</div></div>';
+    	  			
+    				$('#div_manufacture').append(html_carmanufacture)
+    				$('#div_model').append(html_carmodel)
+    				$('#div_buildyear').append(html_buildyear)
+    				$('#div_carcondition').append(html_condition)
+    				$('#div_cylinder').append(html_cylinder)
+    				$('#div_fueltype').append(html_fueltype)
+    				$('#div_drive').append(html_drivetype)
+    				$('#div_state').append(html_state)
+    				$('#div_carsize').append(html_size)
+    				$('#div_pricerange').append(html_price)
+    				document.getElementById('minpricevalue').value='₹ '+ minprice;
+    				document.getElementById('maxpricevalue').value='₹ '+ maxprice;
+    				document.getElementById('hiddenminpricevalue').value = minprice;
+    				document.getElementById('hiddenmaxpricevalue').value = maxprice;
+    			}
+    		});
+           
+            
+            
+        })
+    </script>
+</head>
+<body class="backcolor">
+	<div id="spinnerDiv"></div>
+	<div id="nav-bar"></div>
+   	<br/><br/><br/><br/>
+	
+	
+   	<div style="margin:20px">
+    	<div class="row">
+    		<div class="col-10 div-style" id="carcard"></div>
+    		<div class="col div-style">
+    			<label>Filter Your Search!</label>
+    			<div class="row"><button class="btn btn-primary" onclick="clearFilters()">Clear All Filters</button></div>
+    			<div class="accordion accordion-flush" id="car_filters">
+  					<div class="accordion-item">
+    					<h2 class="accordion-header" id="filter_manufacturer">
+      						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#manufacturer_div" aria-expanded="false" aria-controls="manufacturer_div">
+        						Manufacturer
+      						</button>
+    					</h2>
+    					<div id="manufacturer_div" class="accordion-collapse collapse" aria-labelledby="filter_manufacturer" data-bs-parent="#car_filters">
+      						<div class="accordion-body" id="div_manufacture"></div>
+    					</div>
+  					</div>
+  					<div class="accordion-item">
+    					<h2 class="accordion-header" id="filter_model">
+      						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#model_div" aria-expanded="false" aria-controls="model_div">
+        						Model
+      						</button>
+    					</h2>
+    					<div id="model_div" class="accordion-collapse collapse" aria-labelledby="filter_model" data-bs-parent="#car_filters">
+      						<div class="accordion-body" id="div_model"></div>
+    					</div>
+  					</div>
+  					<div class="accordion-item">
+    					<h2 class="accordion-header" id="filter_price">
+      						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#price_div" aria-expanded="false" aria-controls="price_div">
+        						Price Range
+      						</button>
+    					</h2>
+    					<div id="price_div" class="accordion-collapse collapse" aria-labelledby="filter_price" data-bs-parent="#car_filters">
+      						<div class="accordion-body" id="div_pricerange">
+      							<div class="row">
+      								<div class="col">
+      									<input type="text" class="form-control" id="minpricevalue" name="minpricevalue" disabled style= "font-size:12px; width:130%">
+      									<input type="text" class="form-control hide-element" id="hiddenminpricevalue" name="hiddenminpricevalue">
+      								</div>
+      								<div class="col">
+      									<input type="text" class="form-control" id="maxpricevalue" name="maxpricevalue" style= "font-size:12px; width:130%" disabled>
+      									<input type="text" class="form-control hide-element" id="hiddenmaxpricevalue" name="hiddenmaxpricevaluee">
+      								</div>
+      							</div>
+      						</div>
+      					</div>    						
+  					</div>
+  					<div class="accordion-item">
+    					<h2 class="accordion-header" id="filter_year">
+      						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#year_div" aria-expanded="false" aria-controls="year_div">
+        						Build Year
+      						</button>
+    					</h2>
+    					<div id="year_div" class="accordion-collapse collapse" aria-labelledby="filter_year" data-bs-parent="#car_filters">
+      						<div class="accordion-body" id="div_buildyear"></div>
+    					</div>
+  					</div>
+  					<div class="accordion-item">
+    					<h2 class="accordion-header" id="filter_condition">
+      						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#condition_div" aria-expanded="false" aria-controls="condition_div">
+        						Car Condition
+      						</button>
+    					</h2>
+    					<div id="condition_div" class="accordion-collapse collapse" aria-labelledby="filter_condition" data-bs-parent="#car_filters">
+      						<div class="accordion-body" id="div_carcondition"></div>
+    					</div>
+  					</div>
+  					<div class="accordion-item">
+    					<h2 class="accordion-header" id="filter_cylinders">
+      						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cylinder_div" aria-expanded="false" aria-controls="cylinder_div">
+        						Cylinders
+      						</button>
+    					</h2>
+    					<div id="cylinder_div" class="accordion-collapse collapse" aria-labelledby="filter_cylinders" data-bs-parent="#car_filters">
+      						<div class="accordion-body" id="div_cylinder"></div>
+    					</div>
+  					</div>
+  					<div class="accordion-item">
+    					<h2 class="accordion-header" id="filter_fuel">
+      						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#fuel_div" aria-expanded="false" aria-controls="fuel_div">
+        						Fuel Type
+      						</button>
+    					</h2>
+    					<div id="fuel_div" class="accordion-collapse collapse" aria-labelledby="filter_fuel" data-bs-parent="#car_filters">
+      						<div class="accordion-body" id="div_fueltype"></div>
+    					</div>
+  					</div>
+  					<div class="accordion-item">
+    					<h2 class="accordion-header" id="filter_drive">
+      						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#drive_div" aria-expanded="false" aria-controls="drive_div">
+        						Drive Type
+      						</button>
+    					</h2>
+    					<div id="drive_div" class="accordion-collapse collapse" aria-labelledby="filter_drive" data-bs-parent="#car_filters">
+      						<div class="accordion-body" id="div_drive"></div>
+    					</div>
+  					</div>
+  					<div class="accordion-item">
+    					<h2 class="accordion-header" id="filter_state">
+      						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#state_div" aria-expanded="false" aria-controls="state_div">
+        						State
+      						</button>
+    					</h2>
+    					<div id="state_div" class="accordion-collapse collapse" aria-labelledby="filter_state" data-bs-parent="#car_filters">
+      						<div class="accordion-body" id="div_state"></div>
+    					</div>
+  					</div>
+  					<div class="accordion-item">
+    					<h2 class="accordion-header" id="filter_size">
+      						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#size_div" aria-expanded="false" aria-controls="size_div">
+        						Car Size
+      						</button>
+    					</h2>
+    					<div id="size_div" class="accordion-collapse collapse" aria-labelledby="filter_size" data-bs-parent="#car_filters">
+      						<div class="accordion-body" id="div_carsize"></div>
+    					</div>
+  					</div>
+				</div>
+    		</div>
+    	</div>
+    </div>
+</body>
+</html>
